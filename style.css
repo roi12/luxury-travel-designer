@@ -1,0 +1,267 @@
+/* CSS Reset & Base */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fonts */
+@font-face {
+    font-family: 'SaolDisplay';
+    src: url('./SaolDisplay-Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'AmoretSans';
+    src: url('./AmoretSans.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --bg-color: #000000;
+    /* Deepest Black */
+    --text-primary: #FFFFFF;
+    /* Pure White */
+    --text-secondary: #B0B0B0;
+    /* Light Grey for subtlety */
+    --accent-color: #FFFFFF;
+
+    --font-heading: 'SaolDisplay', sans-serif;
+    --font-body: 'AmoretSans', sans-serif;
+
+    --transition-timing: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    /* Prevent scrolling, content revealed on click */
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+/* Texture Overlay (Optional, made subtler for black) */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* CONTAINER */
+.main-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* HERO SECTION */
+.hero-content {
+    text-align: center;
+    z-index: 2;
+    transition: transform 0.8s var(--transition-timing), opacity 0.8s var(--transition-timing);
+}
+
+.headline {
+    font-family: var(--font-heading);
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-family: var(--font-body);
+    font-size: clamp(0.75rem, 1vw, 0.95rem);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--text-secondary);
+}
+
+/* FOOTER NAV (Triggers) */
+.footer-nav {
+    position: absolute;
+    bottom: 3rem;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    z-index: 20;
+}
+
+.nav-link {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-secondary);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* HIDDEN SECTIONS */
+.overlay-section {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    /* Start lower */
+    width: 100%;
+    max-width: 900px;
+    padding: 2rem;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.8s var(--transition-timing), opacity 0.8s ease;
+    z-index: 5;
+}
+
+.overlay-section.active {
+    transform: translate(-50%, -50%);
+    /* Center */
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* About Text Styling */
+.about-text p {
+    font-family: var(--font-body);
+    font-size: clamp(0.5rem, 0.9vw, 0.95rem);
+    letter-spacing: 0.08em;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+    line-height: 1.8;
+}
+
+.about-text p:last-child {
+    margin-bottom: 0;
+}
+
+.affiliate-disclaimer {
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    margin-top: 4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.8;
+}
+
+.affiliate-disclaimer a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+/* Contact Text Styling */
+.contact-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.contact-link {
+    font-family: var(--font-body);
+    font-size: clamp(0.7rem, 4vw, 1rem);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    max-width: 90vw;
+    display: inline-block;
+}
+
+@media (max-width: 600px) {
+    .contact-link {
+        letter-spacing: 0.05em;
+    }
+}
+
+.contact-link:hover {
+    opacity: 0.7;
+}
+
+/* STATES */
+/* When an overlay is active, hero shrinks and moves up instead of disappearing */
+body.content-open .hero-content {
+    opacity: 1;
+    /* Keep visible */
+    transform: translateY(-35vh) scale(0.6);
+    /* Move up and shrink */
+    pointer-events: none;
+    /* Prevent interaction with header when content is open */
+}
+
+/* Adjust overlay positioning if needed to ensure no overlap */
+.overlay-section.active {
+    transform: translate(-50%, -40%);
+    /* Center vertically, slightly adjusted */
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+
+.fixed-email {
+    position: absolute;
+    bottom: 5.5rem;
+    width: 100%;
+    text-align: center;
+    z-index: 20;
+    pointer-events: none;
+    /* Let clicks pass through container */
+}
+
+.fixed-email a {
+    pointer-events: auto;
+    /* Enable clicks on link */
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: opacity 0.3s ease;
+}
+
+.fixed-email a:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}

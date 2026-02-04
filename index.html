@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flâneur – Travel & CONCIERGE</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="FLÂNEUR PROVIDES bespoke TRAVEL AND CONCIERGE SERVICES FOR private clients – luxury Hotels, Private aviation & Yachting">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="main-container">
+
+        <!-- HERO SECTION (Visible Initially) -->
+        <div class="hero-content" id="hero">
+            <h1 class="headline">FLÂNEUR</h1>
+            <p class="subtitle">Amalfi Coast & Milan</p>
+        </div>
+
+        <!-- ABOUT SECTION (Hidden) -->
+        <div class="overlay-section" id="about-section">
+            <div class="about-text">
+                <p>“flâneur is a man who strolls idly through the city streets, unhurried, taking in the surroundings
+                    and savoring the emotions they evoke.”</p>
+                <p>Experts in designing bespoke concierge and travel experiences.</p>
+                <p>Flâneur is part of exclusive Preferred Partner programs, providing our clients entry to a world
+                    reserved for insiders. From preferred rates and VIP amenities to personalized upgrades and elevated
+                    on-property recognition, every detail is thoughtfully curated to enhance the journey.</p>
+                <p>Our mission is creating special moments.</p>
+                <p>DISCRETION IS Paramount TO US.</p>
+            </div>
+
+            <p class="affiliate-disclaimer">Flâneur is an affiliate of <a href="https://fora.travel/">fora</a></p>
+
+        </div>
+
+
+
+
+        <div class="fixed-email">
+            <a href="mailto:Isaia.lauritano@fora.travel">Isaia.lauritano@fora.travel</a>
+        </div>
+
+        <!-- BOTTOM NAVIGATION -->
+        <nav class="footer-nav">
+            <button class="nav-link" onclick="toggleSection('about-section', this)">About</button>
+        </nav>
+
+    </div>
+
+    <script>
+        function toggleSection(sectionId, btn) {
+            const body = document.body;
+            const targetSection = document.getElementById(sectionId);
+            const allSections = document.querySelectorAll('.overlay-section');
+            const allBtns = document.querySelectorAll('.nav-link');
+
+            // If the clicked section is already active, close it
+            if (targetSection.classList.contains('active')) {
+                // Close everything
+                targetSection.classList.remove('active');
+                body.classList.remove('content-open');
+                btn.classList.remove('active');
+            } else {
+                // Open new section
+                // First close any other open sections
+                allSections.forEach(s => s.classList.remove('active'));
+                allBtns.forEach(b => b.classList.remove('active'));
+
+                // Activate target
+                targetSection.classList.add('active');
+                body.classList.add('content-open');
+                btn.classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+
+</html>
