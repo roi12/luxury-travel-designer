@@ -273,30 +273,27 @@ body.content-open .hero-content {
 }
 
 /* UNIVERSAL RESPONSIVE FIXES */
+/* UNIVERSAL RESPONSIVE FIXES */
 @media (max-width: 600px) {
 
     /* 
        STRICT BOUNDARIES STRATEGY:
-       Instead of centering the box and hoping it fits, we anchor it 
-       to a Safe Top and Safe Bottom. The content flows within this box 
-       and scrolls if needed. This makes overlap physically impossible.
+       Using fixed pixel values for 'bottom' ensures the text container
+       STOPS exactly where we want it, regardless of screen height.
     */
     .overlay-section.active {
         /* Reset vertical centering */
-        top: 15%;
-        bottom: 25%;
-        /* Huge safety buffer for Email (approx 160-200px) */
+        top: 10%;
+        bottom: 160px;
+        /* STRICT LIMIT: Ends 160px from bottom (Email is at ~70px) */
         transform: translateX(-50%);
         /* Only center horizontally */
 
         height: auto;
         /* Fill the defined space */
         max-height: unset;
-        /* Remove conflicting constraints */
         width: 88%;
-        /* Slightly narrower for breathability */
         padding: 0;
-        /* Remove internal padding that wastes space */
 
         /* Enable Scroll inside this box */
         overflow-y: auto;
@@ -304,51 +301,87 @@ body.content-open .hero-content {
         /* Center content vertically if it's short, otherwise top-align */
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
+        /* Default to top-align so long text starts at top */
     }
+
+    /* Center content if it's short enough to not scroll */
+    .overlay-section.active::before {
+        content: '';
+        flex: 1;
+        /* Pushes content down if short */
+        min-height: 0;
+    }
+
+    .overlay-section.active::after {
+        content: '';
+        flex: 1;
+        /* Pushes content up if short */
+        min-height: 0;
+    }
+
+    /* Note: The above flex hack centers content if short, but scrolls if long. */
 
     /* Ensure content is readable */
     .about-text p {
         font-size: 0.95rem;
-        /* Ensure readable base size */
         line-height: 1.5;
         margin-bottom: 1.25rem;
     }
 
-    /* Tweak bottom spacing inside the scrollable area */
     .affiliate-disclaimer {
         margin-top: 2rem;
         padding-bottom: 1rem;
-        /* minimal padding */
     }
 
-    /* Hide the hero completely when content is open on mobile to avoid visual clutter */
+    /* Hide the hero completely when content is open on mobile */
     body.content-open .hero-content {
         opacity: 0;
         pointer-events: none;
     }
 
-    /* Ensure the fixed elements at the bottom stay put */
-    .fixed-email {
-        bottom: 6rem;
-        /* Move it up slightly if needed */
-    }
+    /* POSITION FIXED ELEMENTS WITH PRECISION */
+    /* Stack order from bottom:
+       1. Footer Nav (About button): bottom 1.5rem (~24px)
+       2. Email: bottom 4.5rem (~72px)
+       3. Overlay Bottom: bottom 160px (~10rem) -> Clear Separation
+    */
 
     .footer-nav {
-        bottom: 2.5rem;
+        bottom: 1.5rem;
+    }
+
+    .fixed-email {
+        bottom: 4.5rem;
     }
 }
 
 /* LANDSCAPE (SHORT) SCREENS */
 @media (max-height: 500px) and (orientation: landscape) {
     .overlay-section.active {
-        top: 10%;
-        bottom: 20%;
-        display: block;
-        /* Let it clear floats/scroll normally */
+        top: 20px;
+        bottom: 20px;
+        /* Full height in landscape */
+        width: 60%;
+        /* Narrower width */
+        right: 20px;
+        left: auto;
+        transform: none;
+        /* Dock to right? Or simple fill */
+
+        /* Layout overrides */
+        transform: translate(-50%, 0);
+        left: 50%;
+        width: 80%;
     }
 
     body.content-open .hero-content {
         opacity: 0;
+    }
+
+    .fixed-email,
+    .footer-nav {
+        display: none;
+        /* Hide non-essentials in extreme landscape to focus on text */
     }
 }
