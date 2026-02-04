@@ -274,9 +274,7 @@ body.content-open .hero-content {
 
 /* Tablet Breakpoint */
 @media (min-width: 768px) {
-    :root {
-        /* Adjustments if necessary, but clamp handles most */
-    }
+
 
     body.content-open .hero-content {
         transform: translateY(-30vh) scale(0.65);
