@@ -232,13 +232,24 @@ body.content-open .hero-content {
 
 /* Adjust overlay positioning if needed to ensure no overlap */
 .overlay-section.active {
-    transform: translate(-50%, -40%);
-    /* Center vertically, slightly adjusted */
+    transform: translate(-50%, -50%);
+    /* Center vertically */
     opacity: 1;
     pointer-events: auto;
+    /* UNIVERSAL SAFETY: Prevent overlap on any device */
+    max-height: calc(100vh - 12rem);
+    /* Space for header/footer */
+    overflow-y: auto;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
 }
 
-
+.overlay-section::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+}
 
 .fixed-email {
     position: absolute;
@@ -264,4 +275,67 @@ body.content-open .hero-content {
 .fixed-email a:hover {
     text-decoration: underline;
     opacity: 0.8;
+}
+
+/* --- RESPONSIVE ADJUSTMENTS --- */
+
+/* TABLET & SMALL LAPTOPS (Max Width 1024px) */
+@media (max-width: 1024px) {
+    .overlay-section {
+        width: 85%;
+        max-width: 600px;
+    }
+
+    .overlay-section.active {
+        max-height: calc(100vh - 15rem);
+        /* Ensure clearance */
+    }
+}
+
+/* MOBILE DEVICES (Portrait) */
+@media (max-width: 600px) {
+    .overlay-section.active {
+        transform: translate(-50%, -55%);
+        /* Slight upward shift */
+        max-height: calc(100vh - 180px);
+        /* 180px reserved for bottom elements + breathing room */
+        width: 90%;
+        padding: 1.5rem;
+    }
+
+    .affiliate-disclaimer {
+        margin-top: 2rem;
+    }
+
+    .contact-link {
+        letter-spacing: 0.05em;
+    }
+}
+
+/* LANDSCAPE & SHORT SCREENS */
+@media (max-height: 600px) {
+    .overlay-section.active {
+        top: 50%;
+        transform: translate(-50%, -50%);
+        max-height: calc(100vh - 90px);
+        /* Tight fit */
+    }
+
+    /* Move hero out of the way or hide it on short screens */
+    body.content-open .hero-content {
+        opacity: 0;
+        transform: translateY(-50vh);
+    }
+
+    .footer-nav {
+        bottom: 1rem;
+    }
+
+    .fixed-email {
+        bottom: 3rem;
+    }
+
+    .affiliate-disclaimer {
+        margin-top: 1.5rem;
+    }
 }
