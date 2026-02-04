@@ -26,18 +26,38 @@
     font-display: swap;
 }
 
+/* Variables & Design System */
 :root {
+    /* Colors */
     --bg-color: #000000;
-    /* Deepest Black */
     --text-primary: #FFFFFF;
-    /* Pure White */
     --text-secondary: #B0B0B0;
-    /* Light Grey for subtlety */
-    --accent-color: #FFFFFF;
 
-    --font-heading: 'SaolDisplay', sans-serif;
+    /* Typography */
+    --font-heading: 'SaolDisplay', serif;
     --font-body: 'AmoretSans', sans-serif;
 
+    /* Fluid Typography - clamp(min, val, max) */
+    --fs-h1: clamp(28px, 6vw, 56px);
+    --fs-subtitle: clamp(12px, 1.5vw, 15px);
+    /* 14px to 18px */
+    --fs-p: clamp(14px, 3.5vw, 18px);
+    --fs-link: clamp(12px, 2vw, 14px);
+    --fs-small: clamp(10px, 1.5vw, 12px);
+
+    /* Spacing System */
+    --space-xs: clamp(8px, 2vw, 16px);
+    --space-sm: clamp(16px, 3vw, 32px);
+    --space-md: clamp(24px, 5vw, 56px);
+    --space-lg: clamp(40px, 8vw, 96px);
+
+    /* Layout */
+    --content-width: 960px;
+    --container-padding: clamp(16px, 5vw, 48px);
+    --header-height: 100px;
+    /* buffer for any fixed headers if needed, mostly for logic */
+
+    /* Animation */
     --transition-timing: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -45,18 +65,15 @@ html,
 body {
     height: 100%;
     width: 100%;
-    overflow: hidden;
-    /* Prevent scrolling, content revealed on click */
-}
-
-body {
     background-color: var(--bg-color);
-    font-family: var(--font-body);
     color: var(--text-primary);
+    font-family: var(--font-body);
     line-height: 1.6;
+    overflow: hidden;
+    /* App-like feel, preventing body scroll */
 }
 
-/* Texture Overlay (Optional, made subtler for black) */
+/* Texture Overlay */
 body::before {
     content: "";
     position: fixed;
@@ -70,7 +87,7 @@ body::before {
     z-index: 10;
 }
 
-/* CONTAINER */
+/* Main Container - Flex Centering */
 .main-container {
     position: relative;
     height: 100%;
@@ -79,54 +96,57 @@ body::before {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: var(--container-padding);
 }
 
-/* HERO SECTION */
+/* Hero Section */
 .hero-content {
     text-align: center;
     z-index: 2;
     transition: transform 0.8s var(--transition-timing), opacity 0.8s var(--transition-timing);
+    max-width: var(--content-width);
+    width: 100%;
 }
 
 .headline {
     font-family: var(--font-heading);
-    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-size: var(--fs-h1);
     font-weight: 400;
-    letter-spacing: -0.01em;
+    letter-spacing: clamp(2px, 0.4vw, 6px);
+    margin-bottom: var(--space-xs);
     color: var(--text-primary);
-    margin-bottom: 0.5rem;
+    line-height: 1.1;
 }
 
 .subtitle {
     font-family: var(--font-body);
-    font-size: clamp(0.75rem, 1vw, 0.95rem);
+    font-size: var(--fs-subtitle);
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.25em;
     color: var(--text-secondary);
 }
 
-/* FOOTER NAV (Triggers) */
+/* Footer Nav */
 .footer-nav {
     position: absolute;
-    bottom: 3rem;
-    left: 0;
+    bottom: var(--space-sm);
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 4rem;
-    z-index: 20;
+    z-index: 30;
+    /* Higher than email to be clickable */
 }
 
 .nav-link {
     font-family: var(--font-body);
-    font-size: 0.85rem;
+    font-size: var(--fs-link);
     text-transform: uppercase;
     letter-spacing: 0.15em;
     color: var(--text-secondary);
-    cursor: pointer;
     background: none;
     border: none;
+    cursor: pointer;
     padding: 0.5rem;
     transition: color 0.3s ease;
 }
@@ -138,38 +158,79 @@ body::before {
     text-underline-offset: 4px;
 }
 
-/* HIDDEN SECTIONS */
+/* Fixed Email */
+.fixed-email {
+    position: absolute;
+    bottom: clamp(60px, 12vh, 100px);
+    width: 100%;
+    text-align: center;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.fixed-email a {
+    pointer-events: auto;
+    font-family: var(--font-body);
+    font-size: var(--fs-link);
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: opacity 0.3s ease;
+}
+
+.fixed-email a:hover {
+    opacity: 0.7;
+}
+
+/* Overlay Section (About) */
 .overlay-section {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 50%);
-    /* Start lower */
-    width: 100%;
-    max-width: 900px;
-    padding: 2rem;
-    text-align: center;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     opacity: 0;
     pointer-events: none;
-    transition: transform 0.8s var(--transition-timing), opacity 0.8s ease;
+    transition: opacity 0.8s ease;
     z-index: 5;
+    padding: var(--container-padding);
 }
 
 .overlay-section.active {
-    transform: translate(-50%, -50%);
-    /* Center */
     opacity: 1;
     pointer-events: auto;
 }
 
-/* About Text Styling */
+.about-text {
+    max-width: var(--content-width);
+    width: 100%;
+    text-align: center;
+
+    /* Scroll handling */
+    max-height: 75vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+
+    /* Ensure text doesn't hit the email at bottom of scroll */
+    padding-bottom: 120px;
+}
+
+.about-text::-webkit-scrollbar {
+    display: none;
+}
+
 .about-text p {
     font-family: var(--font-body);
-    font-size: clamp(0.5rem, 0.9vw, 0.95rem);
+    font-size: var(--fs-p);
     letter-spacing: 0.08em;
-    margin-bottom: 2rem;
+    line-height: 1.6;
+    margin-bottom: var(--space-sm);
     color: var(--text-primary);
-    line-height: 1.8;
+    max-width: 65ch;
+    /* Character limit for readability */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .about-text p:last-child {
@@ -177,9 +238,8 @@ body::before {
 }
 
 .affiliate-disclaimer {
-    font-family: var(--font-body);
-    font-size: 0.6rem;
-    margin-top: 4rem;
+    margin-top: var(--space-md);
+    font-size: var(--fs-small);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     opacity: 0.8;
@@ -190,198 +250,91 @@ body::before {
     text-decoration: underline;
 }
 
-/* Contact Text Styling */
-.contact-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
+/* Contact Links specifically styled if they appear in text */
 .contact-link {
     font-family: var(--font-body);
-    font-size: clamp(0.7rem, 4vw, 1rem);
+    font-size: var(--fs-link);
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--text-primary);
     text-decoration: none;
     transition: opacity 0.3s ease;
-    max-width: 90vw;
-    display: inline-block;
-}
-
-@media (max-width: 600px) {
-    .contact-link {
-        letter-spacing: 0.05em;
-    }
 }
 
 .contact-link:hover {
     opacity: 0.7;
 }
 
-/* STATES */
-/* When an overlay is active, hero shrinks and moves up instead of disappearing */
+/* Interaction State */
 body.content-open .hero-content {
-    opacity: 1;
-    /* Keep visible */
-    transform: translateY(-35vh) scale(0.6);
-    /* Move up and shrink */
-    pointer-events: none;
-    /* Prevent interaction with header when content is open */
+    /* Moves up and fades out slightly/shrinks */
+    transform: translateY(-25vh) scale(0.7);
+    opacity: 0.2;
 }
 
-/* Adjust overlay positioning if needed to ensure no overlap */
-.overlay-section.active {
-    transform: translate(-50%, -50%);
-    /* Center vertically */
-    opacity: 1;
-    pointer-events: auto;
-    /* UNIVERSAL SAFETY: Prevent overlap on any device */
-    max-height: calc(100vh - 12rem);
-    /* Space for header/footer */
-    overflow-y: auto;
-    scrollbar-width: none;
-    /* Firefox */
-    -ms-overflow-style: none;
-    /* IE/Edge */
-}
-
-.overlay-section::-webkit-scrollbar {
-    display: none;
-    /* Chrome/Safari */
-}
-
-.fixed-email {
-    position: absolute;
-    bottom: 5.5rem;
-    width: 100%;
-    text-align: center;
-    z-index: 20;
-    pointer-events: none;
-    /* Let clicks pass through container */
-}
-
-.fixed-email a {
-    pointer-events: auto;
-    /* Enable clicks on link */
-    font-family: var(--font-body);
-    font-size: 0.7rem;
-    color: var(--text-primary);
-    text-decoration: none;
-    letter-spacing: 0.1em;
-    transition: opacity 0.3s ease;
-}
-
-/* UNIVERSAL RESPONSIVE FIXES */
-/* UNIVERSAL RESPONSIVE FIXES */
-@media (max-width: 600px) {
-
-    /* 
-       STRICT BOUNDARIES STRATEGY:
-       Using fixed pixel values for 'bottom' ensures the text container
-       STOPS exactly where we want it, regardless of screen height.
-    */
-    .overlay-section.active {
-        /* Reset vertical centering */
-        top: 10%;
-        bottom: 160px;
-        /* STRICT LIMIT: Ends 160px from bottom (Email is at ~70px) */
-        transform: translateX(-50%);
-        /* Only center horizontally */
-
-        height: auto;
-        /* Fill the defined space */
-        max-height: unset;
-        width: 88%;
-        padding: 0;
-
-        /* Enable Scroll inside this box */
-        overflow-y: auto;
-
-        /* Center content vertically if it's short, otherwise top-align */
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        /* Default to top-align so long text starts at top */
+/* Tablet Breakpoint */
+@media (min-width: 768px) {
+    :root {
+        /* Adjustments if necessary, but clamp handles most */
     }
 
-    /* Center content if it's short enough to not scroll */
-    .overlay-section.active::before {
-        content: '';
-        flex: 1;
-        /* Pushes content down if short */
-        min-height: 0;
+    body.content-open .hero-content {
+        transform: translateY(-30vh) scale(0.65);
+        opacity: 0.3;
+    }
+}
+
+/* Desktop Breakpoint */
+@media (min-width: 1200px) {
+    :root {
+        /* Increase vertical spacing and airiness */
+        --lh-body: 1.8;
     }
 
-    .overlay-section.active::after {
-        content: '';
-        flex: 1;
-        /* Pushes content up if short */
-        min-height: 0;
-    }
-
-    /* Note: The above flex hack centers content if short, but scrolls if long. */
-
-    /* Ensure content is readable */
     .about-text p {
-        font-size: 0.95rem;
-        line-height: 1.5;
-        margin-bottom: 1.25rem;
+        line-height: 1.8;
+        letter-spacing: 0.1em;
+        /* Slightly increased */
     }
 
-    .affiliate-disclaimer {
-        margin-top: 2rem;
-        padding-bottom: 1rem;
-    }
-
-    /* Hide the hero completely when content is open on mobile */
     body.content-open .hero-content {
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    /* POSITION FIXED ELEMENTS WITH PRECISION */
-    /* Stack order from bottom:
-       1. Footer Nav (About button): bottom 1.5rem (~24px)
-       2. Email: bottom 4.5rem (~72px)
-       3. Overlay Bottom: bottom 160px (~10rem) -> Clear Separation
-    */
-
-    .footer-nav {
-        bottom: 1.5rem;
-    }
-
-    .fixed-email {
-        bottom: 4.5rem;
+        /* On large screens, we can keep it clearer */
+        opacity: 1;
+        transform: translateY(-35vh) scale(0.6);
     }
 }
 
-/* LANDSCAPE (SHORT) SCREENS */
-@media (max-height: 500px) and (orientation: landscape) {
-    .overlay-section.active {
-        top: 20px;
-        bottom: 20px;
-        /* Full height in landscape */
-        width: 60%;
-        /* Narrower width */
-        right: 20px;
-        left: auto;
-        transform: none;
-        /* Dock to right? Or simple fill */
+/* Accessibility: High Contrast & Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
 
-        /* Layout overrides */
-        transform: translate(-50%, 0);
-        left: 50%;
-        width: 80%;
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
+}
 
-    body.content-open .hero-content {
-        opacity: 0;
+/* Landscape Mode Fix for Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero-content {
+        margin-top: 20px;
     }
 
     .fixed-email,
     .footer-nav {
+        /* Hide non-essential elements on short screens to prioritize content */
         display: none;
-        /* Hide non-essentials in extreme landscape to focus on text */
+    }
+
+    .about-text {
+        max-height: 90vh;
+        padding-bottom: 20px;
+    }
+
+    body.content-open .hero-content {
+        opacity: 0;
+        /* Hide completely to save space */
     }
 }
