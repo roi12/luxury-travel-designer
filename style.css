@@ -272,70 +272,83 @@ body.content-open .hero-content {
     transition: opacity 0.3s ease;
 }
 
-.fixed-email a:hover {
-    text-decoration: underline;
-    opacity: 0.8;
-}
-
-/* --- RESPONSIVE ADJUSTMENTS --- */
-
-/* TABLET & SMALL LAPTOPS (Max Width 1024px) */
-@media (max-width: 1024px) {
-    .overlay-section {
-        width: 85%;
-        max-width: 600px;
-    }
-
-    .overlay-section.active {
-        max-height: calc(100vh - 15rem);
-        /* Ensure clearance */
-    }
-}
-
-/* MOBILE DEVICES (Portrait) */
+/* UNIVERSAL RESPONSIVE FIXES */
 @media (max-width: 600px) {
+
+    /* 
+       STRICT BOUNDARIES STRATEGY:
+       Instead of centering the box and hoping it fits, we anchor it 
+       to a Safe Top and Safe Bottom. The content flows within this box 
+       and scrolls if needed. This makes overlap physically impossible.
+    */
     .overlay-section.active {
-        transform: translate(-50%, -55%);
-        /* Slight upward shift */
-        max-height: calc(100vh - 180px);
-        /* 180px reserved for bottom elements + breathing room */
-        width: 90%;
-        padding: 1.5rem;
+        /* Reset vertical centering */
+        top: 15%;
+        bottom: 25%;
+        /* Huge safety buffer for Email (approx 160-200px) */
+        transform: translateX(-50%);
+        /* Only center horizontally */
+
+        height: auto;
+        /* Fill the defined space */
+        max-height: unset;
+        /* Remove conflicting constraints */
+        width: 88%;
+        /* Slightly narrower for breathability */
+        padding: 0;
+        /* Remove internal padding that wastes space */
+
+        /* Enable Scroll inside this box */
+        overflow-y: auto;
+
+        /* Center content vertically if it's short, otherwise top-align */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
+    /* Ensure content is readable */
+    .about-text p {
+        font-size: 0.95rem;
+        /* Ensure readable base size */
+        line-height: 1.5;
+        margin-bottom: 1.25rem;
+    }
+
+    /* Tweak bottom spacing inside the scrollable area */
     .affiliate-disclaimer {
         margin-top: 2rem;
+        padding-bottom: 1rem;
+        /* minimal padding */
     }
 
-    .contact-link {
-        letter-spacing: 0.05em;
-    }
-}
-
-/* LANDSCAPE & SHORT SCREENS */
-@media (max-height: 600px) {
-    .overlay-section.active {
-        top: 50%;
-        transform: translate(-50%, -50%);
-        max-height: calc(100vh - 90px);
-        /* Tight fit */
-    }
-
-    /* Move hero out of the way or hide it on short screens */
+    /* Hide the hero completely when content is open on mobile to avoid visual clutter */
     body.content-open .hero-content {
         opacity: 0;
-        transform: translateY(-50vh);
+        pointer-events: none;
+    }
+
+    /* Ensure the fixed elements at the bottom stay put */
+    .fixed-email {
+        bottom: 6rem;
+        /* Move it up slightly if needed */
     }
 
     .footer-nav {
-        bottom: 1rem;
+        bottom: 2.5rem;
+    }
+}
+
+/* LANDSCAPE (SHORT) SCREENS */
+@media (max-height: 500px) and (orientation: landscape) {
+    .overlay-section.active {
+        top: 10%;
+        bottom: 20%;
+        display: block;
+        /* Let it clear floats/scroll normally */
     }
 
-    .fixed-email {
-        bottom: 3rem;
-    }
-
-    .affiliate-disclaimer {
-        margin-top: 1.5rem;
+    body.content-open .hero-content {
+        opacity: 0;
     }
 }
