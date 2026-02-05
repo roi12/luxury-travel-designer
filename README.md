@@ -4,8 +4,8 @@ This is a minimal, "quiet-luxury" website designed with HTML and Vanilla CSS.
 
 ## Features
 - **Typography**: 
-  - Headline: *AmoretSans* (Custom font)
-  - Body/Subtitle: *Cera Pro* (Custom font)
+  - Headline: *SaolDispay-light* (Custom font)
+  - Body/Subtitle: *AmoretSans* (Custom font)
 - **Layout**: Full-screen hero section followed by minimal content sections.
 - **Aesthetic**: Soft off-white background with subtle grain/noise reduction.
 - **Animations**: CSS Keyframe animations for a smooth fade-down effect on load.
