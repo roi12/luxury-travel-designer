@@ -265,10 +265,11 @@ body::before {
 .affiliate-disclaimer {
     margin-top: var(--space-md);
     /* // TYPOGRAPHY: Significantly smaller as requested */
-    font-size: clamp(9px, 1.5vw, 11px);
+    font-size: clamp(6px, 1.5vw, 8px);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     opacity: 0.8;
+    color: #B0B0B0;
 }
 
 .affiliate-disclaimer a {
