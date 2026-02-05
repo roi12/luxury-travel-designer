@@ -38,12 +38,17 @@
     --font-body: 'AmoretSans', sans-serif;
 
     /* Fluid Typography - clamp(min, val, max) */
-    --fs-h1: clamp(28px, 6vw, 56px);
-    --fs-subtitle: clamp(12px, 1.5vw, 15px);
-    /* 14px to 18px */
-    --fs-p: clamp(14px, 3.5vw, 18px);
-    --fs-link: clamp(12px, 2vw, 14px);
-    --fs-small: clamp(10px, 1.5vw, 12px);
+    --fs-h1: clamp(40px, 8vw, 72px);
+    /* // 2 */
+    --fs-subtitle: clamp(6px, 2.5vw, 8px);
+    /* // 1 */
+
+    --fs-p: clamp(13px, 3vw, 16px);
+    /* // 4 */
+    --fs-link: clamp(12px, 2.5vw, 14px);
+    /* // 1 */
+    --fs-small: clamp(11px, 2.3vw, 13px);
+    /* // 3 */
 
     /* Spacing System */
     --space-xs: clamp(8px, 2vw, 16px);
@@ -102,10 +107,19 @@ body::before {
 /* Hero Section */
 .hero-content {
     text-align: center;
-    z-index: 2;
+    z-index: 20;
+    /* Ensure it stays above/visible */
     transition: transform 0.8s var(--transition-timing), opacity 0.8s var(--transition-timing);
     max-width: var(--content-width);
     width: 100%;
+
+    /* // POSITIONING UPDATE: Use TOP for smooth transition */
+    position: absolute;
+    top: 70%;
+    /* Default: Lower part of screen */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Center on pivot */
 }
 
 .headline {
@@ -124,7 +138,9 @@ body::before {
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.25em;
-    color: var(--text-secondary);
+    letter-spacing: 0.25em;
+    color: #FFFFFF;
+    /* // 6 */
 }
 
 /* Footer Nav */
@@ -141,6 +157,7 @@ body::before {
 .nav-link {
     font-family: var(--font-body);
     font-size: var(--fs-link);
+    /* // 1 */
     text-transform: uppercase;
     letter-spacing: 0.15em;
     color: var(--text-secondary);
@@ -171,15 +188,19 @@ body::before {
 .fixed-email a {
     pointer-events: auto;
     font-family: var(--font-body);
-    font-size: var(--fs-link);
-    color: var(--text-primary);
+    font-size: 8px;
+    /* // 1 */
+    color: #9A9A9A;
+    /* // 7 */
     text-decoration: none;
     letter-spacing: 0.1em;
     transition: opacity 0.3s ease;
 }
 
 .fixed-email a:hover {
-    opacity: 0.7;
+    opacity: 1;
+    text-decoration: underline;
+    text-underline-offset: 4px;
 }
 
 /* Overlay Section (About) */
@@ -189,12 +210,17 @@ body::before {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    /* // Updated: Start from top */
     align-items: center;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.8s ease;
     z-index: 5;
     padding: var(--container-padding);
+    /* // LAYOUT: Text starts BELOW the moved-up logo header */
+    padding-top: 20vh;
+    /* // FIX: Massive bottom padding to prevent Affiliate Disclaimer from touching Email */
+    padding-bottom: clamp(140px, 25vh, 200px);
 }
 
 .overlay-section.active {
@@ -203,17 +229,15 @@ body::before {
 }
 
 .about-text {
-    max-width: var(--content-width);
-    width: 100%;
+    /* Scroll handling - NO SCROLL requested */
+    height: 100%;
+    overflow: hidden;
+    /* Force fit */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     text-align: center;
-
-    /* Scroll handling */
-    max-height: 75vh;
-    overflow-y: auto;
-    scrollbar-width: none;
-
-    /* Ensure text doesn't hit the email at bottom of scroll */
-    padding-bottom: 120px;
+    /* Center text in the upper available space */
 }
 
 .about-text::-webkit-scrollbar {
@@ -222,13 +246,14 @@ body::before {
 
 .about-text p {
     font-family: var(--font-body);
-    font-size: var(--fs-p);
+    /* // TYPOGRAPHY: Smaller as requested */
+    font-size: clamp(8px, 1.6vh, 10px);
     letter-spacing: 0.08em;
-    line-height: 1.6;
-    margin-bottom: var(--space-sm);
+    line-height: 1.5;
+    margin-bottom: 2vh;
     color: var(--text-primary);
-    max-width: 65ch;
-    /* Character limit for readability */
+    max-width: 55ch;
+    /* // Tighter column */
     margin-left: auto;
     margin-right: auto;
 }
@@ -239,7 +264,8 @@ body::before {
 
 .affiliate-disclaimer {
     margin-top: var(--space-md);
-    font-size: var(--fs-small);
+    /* // TYPOGRAPHY: Significantly smaller as requested */
+    font-size: clamp(9px, 1.5vw, 11px);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     opacity: 0.8;
@@ -267,9 +293,11 @@ body::before {
 
 /* Interaction State */
 body.content-open .hero-content {
-    /* Moves up and fades out slightly/shrinks */
-    transform: translateY(-25vh) scale(0.7);
-    opacity: 0.2;
+    /* // ACTION: Diminish (shrink) and go ABOVE the text */
+    top: 12%;
+    transform: translate(-50%, -50%) scale(0.65);
+    /* Shrink significantly */
+    opacity: 1;
 }
 
 /* Tablet Breakpoint */
@@ -277,8 +305,9 @@ body.content-open .hero-content {
 
 
     body.content-open .hero-content {
-        transform: translateY(-30vh) scale(0.65);
-        opacity: 0.3;
+        /* Standardize transition for tablet */
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.65);
     }
 }
 
@@ -298,7 +327,7 @@ body.content-open .hero-content {
     body.content-open .hero-content {
         /* On large screens, we can keep it clearer */
         opacity: 1;
-        transform: translateY(-35vh) scale(0.6);
+        transform: translate(-50%, -50%) scale(0.65);
     }
 }
 
@@ -333,6 +362,6 @@ body.content-open .hero-content {
 
     body.content-open .hero-content {
         opacity: 0;
-        /* Hide completely to save space */
+        /* Hide on landscape mobile to save space */
     }
 }
