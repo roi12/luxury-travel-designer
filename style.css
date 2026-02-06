@@ -37,45 +37,30 @@
     --font-heading: 'SaolDisplay', serif;
     --font-body: 'AmoretSans', sans-serif;
 
-    /* Fluid Typography - clamp(min, val, max) */
-    --fs-h1: clamp(40px, 8vw, 72px);
-    /* // 2 */
-    --fs-subtitle: clamp(6px, 2.5vw, 8px);
-    /* // 1 */
-
-    --fs-p: clamp(13px, 3vw, 16px);
-    /* // 4 */
-    --fs-link: clamp(12px, 2.5vw, 14px);
-    /* // 1 */
-    --fs-small: clamp(11px, 2.3vw, 13px);
-    /* // 3 */
-
-    /* Spacing System */
-    --space-xs: clamp(8px, 2vw, 16px);
-    --space-sm: clamp(16px, 3vw, 32px);
-    --space-md: clamp(24px, 5vw, 56px);
-    --space-lg: clamp(40px, 8vw, 96px);
-
-    /* Layout */
-    --content-width: 960px;
-    --container-padding: clamp(16px, 5vw, 48px);
-    --header-height: 100px;
-    /* buffer for any fixed headers if needed, mostly for logic */
+    /* Spacing */
+    --container-padding: clamp(1rem, 5vw, 3rem);
 
     /* Animation */
     --transition-timing: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+/* 
+   ROOT LAYOUT TEXTURE 
+   Fixes: Used height: 100dvh to handle mobile browser bars correctly.
+*/
 html,
 body {
     height: 100%;
+    height: 100dvh;
+    /* Mobile viewport fix */
     width: 100%;
     background-color: var(--bg-color);
     color: var(--text-primary);
     font-family: var(--font-body);
     line-height: 1.6;
     overflow: hidden;
-    /* App-like feel, preventing body scroll */
+    /* Strict NO SCROLL policy */
+    position: relative;
 }
 
 /* Texture Overlay */
@@ -92,72 +77,199 @@ body::before {
     z-index: 10;
 }
 
-/* Main Container - Flex Centering */
+/* 
+   MAIN CONTAINER 
+   Acts as the coordinate system for all absolute positioning.
+*/
 .main-container {
     position: relative;
     height: 100%;
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: var(--container-padding);
+    overflow: hidden;
 }
 
-/* Hero Section */
+/* 
+   HERO SECTION 
+   Positioned centrally initially. Moves to top when content opens.
+*/
 .hero-content {
-    text-align: center;
-    z-index: 20;
-    /* Ensure it stays above/visible */
-    transition: transform 0.8s var(--transition-timing), opacity 0.8s var(--transition-timing);
-    max-width: var(--content-width);
-    width: 100%;
-
-    /* // POSITIONING UPDATE: Use TOP for smooth transition */
     position: absolute;
     top: 70%;
-    /* Default: Lower part of screen */
     left: 50%;
     transform: translate(-50%, -50%);
-    /* Center on pivot */
+    text-align: center;
+    z-index: 20;
+    width: 100%;
+    max-width: 960px;
+    padding: 0 var(--container-padding);
+    transition: all 0.8s var(--transition-timing);
 }
 
 .headline {
     font-family: var(--font-heading);
-    font-size: clamp(40px, 8vw, 72px);
+    /* Fluid typography - Width based */
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
     font-weight: 400;
-    letter-spacing: clamp(2px, 0.4vw, 6px);
-    margin-bottom: var(--space-xs);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
     color: var(--text-primary);
     line-height: 1.1;
 }
 
 .subtitle {
     font-family: var(--font-body);
-    font-size: var(--fs-subtitle);
+    font-size: clamp(0.5rem, 1.5vw, 0.75rem);
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.25em;
-    letter-spacing: 0.25em;
     color: #FFFFFF;
-    /* // 6 */
 }
 
-/* Footer Nav */
+/* 
+   INTERACTION STATE: MOVES LOGO UP
+   Uses % positioning to be deterministic across screens.
+*/
+body.content-open .hero-content {
+    top: 15%;
+    /* Moves to the top "Safe Zone" */
+    transform: translate(-50%, -50%) scale(0.65);
+}
+
+/* 
+   OVERLAY SECTION (Grid Layout) 
+   Fixes: Uses CSS Grid to allocate strict vertical space.
+   - Top Row: 25% allocated for the Logo.
+   - Middle Row: 1fr allocated for Text (Safe Center).
+   - Bottom Row: 15% allocated for Footer.
+   This ensures text NEVER overlaps logo or footer, regardless of zoom.
+*/
+.overlay-section {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 15;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s var(--transition-timing);
+
+    display: grid;
+    /* Grid Definition: [Logo Zone] [Content Zone] [Footer Zone] */
+    grid-template-rows: 25% 1fr 15%;
+    grid-template-columns: 1fr;
+    justify-items: center;
+}
+
+.overlay-section.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 
+   ABOUT TEXT 
+   Fixes:
+   - Placed in the middle grid track.
+   - Uses flexbox to center content vertically within that track.
+   - Width limited to prevent horizontal clipping.
+   - Typography uses clamp() with vw only (no vh padding hacks).
+*/
+.about-text {
+    grid-row: 2;
+    /* Sits securely between Logo and Footer */
+    width: 90%;
+    max-width: 700px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+    /* Responsive gap */
+}
+
+/* 
+   FLUID TYPOGRAPHY
+   Strictly Width-Based (vw) to satisfy constraints.
+   Ensures readability on mobile (min) and desktop (max).
+*/
+.about-text p {
+    font-family: var(--font-body);
+    /* Min: 11px, Ideal: 1.4vw, Max: 16px */
+    font-size: clamp(11px, 1.4vw, 16px);
+    line-height: 1.6;
+    color: var(--text-primary);
+    margin: 0;
+    /* Prevent extremely long lines */
+    max-width: 60ch;
+}
+
+.about-text .affiliate-disclaimer {
+    font-size: clamp(9px, 0.9vw, 10px);
+    line-height: 1.1;
+    letter-spacing: 0.22em;
+    opacity: 0.45;
+    margin-top: 2.5rem;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+
+.affiliate-disclaimer a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+/* 
+   FOOTER ELEMENTS 
+   Fixes: 
+   - Uses position: absolute within the container context for better layout control.
+   - Z-index elevated to ensure visibility.
+   - Positioned in the "Bottom Zone" area.
+*/
+
+.fixed-email {
+    position: absolute;
+    bottom: 8%;
+    /* Sits visually in the bottom grid zone */
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 50;
+    pointer-events: none;
+    /* Let clicks pass through if needed */
+}
+
+.fixed-email a {
+    pointer-events: auto;
+    font-family: var(--font-body);
+    font-size: clamp(10px, 1.2vw, 12px);
+    color: #9A9A9A;
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.3s ease;
+}
+
+.fixed-email a:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
 .footer-nav {
     position: absolute;
-    bottom: var(--space-sm);
+    bottom: 3%;
+    /* Below the email */
+    left: 0;
     width: 100%;
     display: flex;
     justify-content: center;
-    z-index: 30;
-    /* Higher than email to be clickable */
+    z-index: 60;
 }
 
 .nav-link {
     font-family: var(--font-body);
-    font-size: var(--fs-link);
-    /* // 1 */
+    font-size: clamp(12px, 1.5vw, 14px);
     text-transform: uppercase;
     letter-spacing: 0.15em;
     color: var(--text-secondary);
@@ -175,164 +287,63 @@ body::before {
     text-underline-offset: 4px;
 }
 
-/* Fixed Email */
-.fixed-email {
-    position: absolute;
-    bottom: clamp(60px, 12vh, 100px);
-    width: 100%;
-    text-align: center;
-    z-index: 20;
-    pointer-events: none;
-}
-
-.fixed-email a {
-    pointer-events: auto;
-    font-family: var(--font-body);
-    font-size: 8px;
-    /* // 1 */
-    color: #9A9A9A;
-    /* // 7 */
-    text-decoration: none;
-    letter-spacing: 0.1em;
-    transition: opacity 0.3s ease;
-}
-
-.fixed-email a:hover {
-    opacity: 1;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-}
-
-/* Overlay Section (About) */
-.overlay-section {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /* // Updated: Start from top */
-    align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.8s ease;
-    z-index: 5;
-    padding: var(--container-padding);
-    /* // LAYOUT: Text starts BELOW the moved-up logo header */
-    padding-top: 20vh;
-    /* // FIX: Massive bottom padding to prevent Affiliate Disclaimer from touching Email */
-    padding-bottom: clamp(140px, 25vh, 200px);
-}
-
-.overlay-section.active {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.about-text {
-    /* Scroll handling - NO SCROLL requested */
-    height: 100%;
-    overflow: hidden;
-    /* Force fit */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    /* Center text in the upper available space */
-}
-
-.about-text::-webkit-scrollbar {
-    display: none;
-}
-
-.about-text p {
-    font-family: var(--font-body);
-    /* // TYPOGRAPHY: Smaller as requested */
-    font-size: clamp(8px, 1.6vh, 10px);
-    letter-spacing: 0.08em;
-    line-height: 1.5;
-    margin-bottom: 2vh;
-    color: var(--text-primary);
-    max-width: 55ch;
-    /* // Tighter column */
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.about-text p:last-child {
-    margin-bottom: 0;
-}
-
-.affiliate-disclaimer {
-    margin-top: var(--space-md);
-    /* // TYPOGRAPHY: Significantly smaller as requested */
-    font-size: clamp(6px, 1.5vw, 8px);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    opacity: 0.8;
-    color: #B0B0B0;
-}
-
-.affiliate-disclaimer a {
-    color: inherit;
-    text-decoration: underline;
-}
-
-/* Contact Links specifically styled if they appear in text */
-.contact-link {
-    font-family: var(--font-body);
-    font-size: var(--fs-link);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text-primary);
-    text-decoration: none;
-    transition: opacity 0.3s ease;
-}
-
-.contact-link:hover {
-    opacity: 0.7;
-}
-
-/* Interaction State */
-body.content-open .hero-content {
-    /* // ACTION: Diminish (shrink) and go ABOVE the text */
-    top: 12%;
-    transform: translate(-50%, -50%) scale(0.65);
-    /* Shrink significantly */
-    opacity: 1;
-}
-
-/* Tablet Breakpoint */
-@media (min-width: 768px) {
-
+/* 
+   LANDSCAPE MOBILE OPTIMIZATION
+   Fixes clipping on short screens (e.g. iPhone horizontal).
+   - Reduces Logo Zone and Footer Zone size to give more room to text.
+   - Adjusts gaps and positioning.
+*/
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero-content {
+        /* When closed, move it up a bit so it's not offscreen */
+        top: 60%;
+    }
 
     body.content-open .hero-content {
-        /* Standardize transition for tablet */
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(0.65);
+        /* Move practically offscreen or very high up */
+        top: 10%;
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0.5;
+        /* Fade it out to focus on text */
     }
-}
 
-/* Desktop Breakpoint */
-@media (min-width: 1200px) {
-    :root {
-        /* Increase vertical spacing and airiness */
-        --lh-body: 1.8;
+    /* Grid Adjustment: Shrink top/bottom zones */
+    .overlay-section {
+        grid-template-rows: 10% 1fr 15%;
+    }
+
+    .about-text {
+        gap: 0.5rem;
+        /* Tighter rhythm */
     }
 
     .about-text p {
-        line-height: 1.8;
-        letter-spacing: 0.1em;
-        /* Slightly increased */
+        font-size: 11px;
+        /* Lock size for readability */
+        line-height: 1.4;
+        max-width: 80%;
+        /* Wider text block to save vertical space */
     }
 
-    body.content-open .hero-content {
-        /* On large screens, we can keep it clearer */
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(0.65);
+    .fixed-email {
+        bottom: 2%;
+        right: 2%;
+        /* Move to corner */
+        left: auto;
+        width: auto;
+        text-align: right;
+    }
+
+    .footer-nav {
+        bottom: 2%;
+        /* Align with email or hide if needed */
+        left: 2%;
+        width: auto;
+        justify-content: flex-start;
     }
 }
 
-/* Accessibility: High Contrast & Reduced Motion */
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
 
     *,
@@ -340,29 +351,5 @@ body.content-open .hero-content {
     *::after {
         transition-duration: 0.01ms !important;
         animation-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-}
-
-/* Landscape Mode Fix for Mobile */
-@media (max-height: 800px) and (orientation: landscape) {
-    .hero-content {
-        margin-top: 20px;
-    }
-
-    .fixed-email,
-    .footer-nav {
-        /* Hide non-essential elements on short screens to prioritize content */
-        display: none;
-    }
-
-    .about-text {
-        max-height: 90vh;
-        padding-bottom: 20px;
-    }
-
-    body.content-open .hero-content {
-        opacity: 0;
-        /* Hide on landscape mobile to save space */
     }
 }
