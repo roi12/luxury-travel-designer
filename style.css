@@ -95,7 +95,7 @@ body::before {
 .headline {
     font-family: var(--font-heading);
     /* Fluid typography - Width based */
-    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-size: clamp(3.5rem, 8vw, 5.5rem);
     font-weight: 100;
     letter-spacing: 0.1em;
     margin-bottom: 0.5rem;
@@ -105,13 +105,14 @@ body::before {
 
 .subtitle {
     font-family: var(--font-body);
-    font-size: clamp(0.3rem, 1.5vw, 0.5rem);
+    font-size: clamp(0.5rem, 1.5vw, 0.8rem);
     font-weight: 300;
     text-transform: uppercase;
     letter-spacing: 0.25em;
     color: #FFFFFF;
+    opacity: 0.80;
+    margin-top: 1.5rem;
 }
-
 
 body.content-open .hero-content {
     top: 15%;
@@ -142,7 +143,7 @@ body.content-open .hero-content {
 }
 
 .about-text {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     grid-row: 2;
     /* Sits securely between Logo and Footer */
     width: 90%;
@@ -165,7 +166,7 @@ body.content-open .hero-content {
 .about-text p {
     font-family: var(--font-body);
     /* Min: 11px, Ideal: 1.4vw, Max: 16px */
-    font-size: clamp(8px, 1.2vw, 12px);
+    font-size: clamp(10px, 1.2vw, 15px);
     line-height: 1.8;
     color: var(--text-primary);
     margin: 0;
@@ -177,14 +178,15 @@ body.content-open .hero-content {
     font-size: clamp(9px, 0.9vw, 10px);
     line-height: 1.1;
     letter-spacing: 0.22em;
-    opacity: 0.45;
     margin-top: 2.5rem;
     text-align: center;
-    color: var(--text-secondary);
+    color: #ffffff;
+    opacity: 0.80;
 }
 
 .affiliate-disclaimer a {
-    color: inherit;
+    color: #ffffff;
+    opacity: 0.80;
     text-decoration: underline;
 }
 
@@ -204,7 +206,8 @@ body.content-open .hero-content {
     pointer-events: auto;
     font-family: var(--font-body);
     font-size: clamp(10px, 1.2vw, 12px);
-    color: #9A9A9A;
+    color: #ffffff;
+    opacity: 0.80;
     text-decoration: none;
     letter-spacing: 0.1em;
     transition: color 0.3s ease;
@@ -218,6 +221,8 @@ body.content-open .hero-content {
 
 .footer-nav {
     position: absolute;
+    font-family: var(--font-body);
+    font-size: clamp(10px, 1.2vw, 12px);
     bottom: 3%;
     /* Below the email */
     left: 0;
@@ -229,7 +234,7 @@ body.content-open .hero-content {
 
 .nav-link {
     font-family: var(--font-body);
-    font-size: clamp(12px, 1.5vw, 14px);
+    font-size: clamp(10px, 1.2vw, 12px);
     text-transform: uppercase;
     letter-spacing: 0.15em;
     color: var(--text-secondary);
