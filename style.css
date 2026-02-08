@@ -77,6 +77,10 @@ body::before {
     height: 100%;
     width: 100%;
     overflow: hidden;
+    display: grid;
+    /* Strict 3-Zone Layout: Top (Header), Middle (Content), Bottom (Footer) */
+    grid-template-rows: 25% 1fr 15%;
+    grid-template-columns: 1fr;
 }
 
 .hero-content {
@@ -97,7 +101,7 @@ body::before {
     /* Fluid typography - Width based */
     font-size: clamp(3.5rem, 8vw, 5.5rem);
     font-weight: 100;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.01em;
     margin-bottom: 0.5rem;
     color: var(--text-primary);
     line-height: 1.1;
@@ -120,6 +124,17 @@ body.content-open .hero-content {
     transform: translate(-50%, -50%) scale(0.65);
 }
 
+.about-container {
+    grid-row: 2;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .overlay-section {
     position: absolute;
     inset: 0;
@@ -129,12 +144,9 @@ body.content-open .hero-content {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.8s var(--transition-timing);
-
-    display: grid;
-    /* Grid Definition: [Logo Zone] [Content Zone] [Footer Zone] */
-    grid-template-rows: 25% 1fr 15%;
-    grid-template-columns: 1fr;
-    justify-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .overlay-section.active {
@@ -143,9 +155,6 @@ body.content-open .hero-content {
 }
 
 .about-text {
-    font-size: 1.5rem;
-    grid-row: 2;
-    /* Sits securely between Logo and Footer */
     width: 90%;
     max-width: 700px;
     height: 100%;
@@ -154,8 +163,9 @@ body.content-open .hero-content {
     justify-content: center;
     align-items: center;
     text-align: center;
-    gap: 1.5rem;
-    /* Responsive gap */
+    /* Ultra-responsive gaps to prevent overflow on small devices */
+    gap: clamp(0.7rem, 2.2vh, 1.5rem);
+    padding: 2vh 0;
 }
 
 /* 
@@ -178,7 +188,7 @@ body.content-open .hero-content {
     font-size: clamp(9px, 0.9vw, 10px);
     line-height: 1.1;
     letter-spacing: 0.22em;
-    margin-top: 2.5rem;
+    margin-top: clamp(0.5rem, 2vh, 1.5rem);
     text-align: center;
     color: #ffffff;
     opacity: 0.80;
@@ -190,16 +200,22 @@ body.content-open .hero-content {
     text-decoration: underline;
 }
 
-.fixed-email {
-    position: absolute;
-    bottom: 8%;
-    /* Sits visually in the bottom grid zone */
-    left: 0;
+.footer-zone {
+    grid-row: 3;
     width: 100%;
-    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     z-index: 50;
     pointer-events: none;
-    /* Let clicks pass through if needed */
+}
+
+.fixed-email {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.5rem;
 }
 
 .fixed-email a {
@@ -220,16 +236,12 @@ body.content-open .hero-content {
 }
 
 .footer-nav {
-    position: absolute;
     font-family: var(--font-body);
     font-size: clamp(10px, 1.2vw, 12px);
-    bottom: 3%;
-    /* Below the email */
-    left: 0;
     width: 100%;
     display: flex;
     justify-content: center;
-    z-index: 60;
+    pointer-events: auto;
 }
 
 .nav-link {
@@ -252,53 +264,65 @@ body.content-open .hero-content {
     text-underline-offset: 4px;
 }
 
+@media (max-height: 700px) and (orientation: portrait) {
+    .main-container {
+        grid-template-rows: 20% 1fr 12%;
+    }
+
+    .about-text {
+        gap: clamp(0.5rem, 1.8vh, 1rem);
+    }
+
+    .about-text p {
+        font-size: clamp(10px, 3.2vw, 13px);
+        line-height: 1.5;
+    }
+}
+
 @media (max-height: 500px) and (orientation: landscape) {
     .hero-content {
-        /* When closed, move it up a bit so it's not offscreen */
         top: 60%;
     }
 
     body.content-open .hero-content {
-        /* Move practically offscreen or very high up */
         top: 10%;
         transform: translate(-50%, -50%) scale(0.5);
         opacity: 0.5;
-        /* Fade it out to focus on text */
     }
 
-    /* Grid Adjustment: Shrink top/bottom zones */
-    .overlay-section {
-        grid-template-rows: 10% 1fr 15%;
+    .main-container {
+        grid-template-rows: 15% 1fr 10%;
     }
 
     .about-text {
-        gap: 0.5rem;
-        /* Tighter rhythm */
+        gap: 0.4rem;
+        padding: 0.5rem 0;
     }
 
     .about-text p {
-        font-size: 11px;
-        /* Lock size for readability */
-        line-height: 1.4;
-        max-width: 80%;
-        /* Wider text block to save vertical space */
+        font-size: 10px;
+        line-height: 1.2;
+        max-width: 90%;
+    }
+
+    .about-text .affiliate-disclaimer {
+        margin-top: 0.3rem;
+    }
+
+    .footer-zone {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0 5%;
+        gap: 2rem;
     }
 
     .fixed-email {
-        bottom: 2%;
-        right: 2%;
-        /* Move to corner */
-        left: auto;
         width: auto;
-        text-align: right;
+        margin-bottom: 0;
     }
 
     .footer-nav {
-        bottom: 2%;
-        /* Align with email or hide if needed */
-        left: 2%;
         width: auto;
-        justify-content: flex-start;
     }
 }
 
